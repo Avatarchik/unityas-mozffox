@@ -1,0 +1,20 @@
+{
+    
+    "manifest_version": 2,
+    "name": "UnityAseetStoreExporter",
+    "version": "1.0",
+
+    "description": "Export the list of purchased assets from the Unity Asset Store.",
+
+    "icons": {
+        "48": "icons/border-48.png"
+    },
+
+    "content_scripts": [
+        {
+            "matches": ["*://assetstore.unity.com/account/assets*"],
+            "js": ["assets-list.js"]
+        }
+    ]
+    
+}
