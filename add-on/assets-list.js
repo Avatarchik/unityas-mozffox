@@ -67,19 +67,19 @@ let JALJR = (() => {
             // this asset CSV line (starting with purchased date)
             let csv_line = purchased;
             // loop through the asset items of data and construct its CSV line.
-            for (let j = 0, get_out = false, got_url = false; j < data.length && (!get_out); j++) {
+            for (let j = 0, get_out = false; j < data.length && (!get_out); j++) {
                 let datum = data[j].innerText;
-                if (datum === config.continue_trigger) get_out = true;
-                else if (datum !== "") {
+                if (datum === config.continue_trigger) {
+                    get_out = true;
+                } else if (datum !== "") {
                     csv_line += ',' + datum;
-                    // get URL
-                    if (! got_url) {
-                        csv_line += ',' + data[j].href;
-                        got_url = true;
+                    let url = data[j].href;
+                    if (url) {
+                        csv_line += ',' + url;
                     }
                 }
             }
-            // exclude the known empty items of data (the image), configured in config.
+            // add the generated line to the result list.
             csv.push(csv_line);
         }
 
