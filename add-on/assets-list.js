@@ -6,21 +6,76 @@
  */
 
 // extension namespace.
-let JALJR = (() => {
+let U3Das_FFox = (() => {
 
     let 
         config, main,
-        getUserID, generateCSV
+        addButton, getUserID, generateCSV
     ;
 
     // configuration of the routine based on Unity Asset Store purchased list page structure
     config = {
-        user_info_css_class : '_1qxEutYGw0dtTEX0-UbPxn',
-        asset_css_class     : '_1MwyWaFqWeTD7RHnwlMoKc',
-        img_css_class       : '_2NSfYMsH-s4Ngs2YTJIoAw',
-        date_css_class      : 'iIoTnjX3ep3NHov9GbPAb',
-        continue_trigger    : 'Release Notes'
+        user_info_css_class     : '_1qxEutYGw0dtTEX0-UbPxn',
+        asset_css_class         : '_1MwyWaFqWeTD7RHnwlMoKc',
+        img_css_class           : '_2NSfYMsH-s4Ngs2YTJIoAw',
+        date_css_class          : 'iIoTnjX3ep3NHov9GbPAb',
+        buttons_div_css_class   : '_1zbKdUvj5aiTaYPugA2oG9',
+        button_css_class        : '_3UE3JHvXlpWV2IcGxqdlNT pDJt-g2kSogfau8sJrU7N auto _3wJlwPyz75q9ihlChgrt8u F35wsRpzrixrswzmS7EJ2',
+        button_form_action      : 'http://example.com/put_the_backend_url_here',
+        continue_trigger        : 'Release Notes'
     }; // config
+
+    /**
+     * addButton
+     * @description Adds the CSV generation button to the page.
+     * @param   {list}  csv_data    generated CSV data to send.
+     * @returns {boolean} true if button added; false otherwise.
+     *
+     */
+    addButton = (csv_data) => {
+
+        // if the form already exists, delete it.
+        let form = document.getElementById('U3Das_FFox_Form');
+        if (form) {
+            form.remove();
+        }
+
+        // get the parent element (the buttons bars at the bottom of the page)
+        let parent = document.getElementsByClassName(config.buttons_div_css_class)[0];
+        if (! parent) {
+            console.warn ('Could not find the div parent to the buttons.');
+            return false;
+        }
+
+        // create the form that sends the CSV data to the back-end to be encoded and downloaded.
+        form = document.createElement('FORM');
+        form.setAttribute('id','U3Das_FFox_Form');
+        form.setAttribute('name','U3Das_FFox_Form');
+        form.setAttribute('action', config.button_form_action);
+        form.setAttribute('enctype', 'multipart/form-data');
+        form.setAttribute('method', 'post');
+        form.setAttribute('target', '_blank');
+
+        // create the hidden field where to store the CSV data.
+        let data_field  = document.createElement('INPUT');
+        data_field.setAttribute('type', 'hidden');
+        data_field.setAttribute('name', 'U3Das_FFox_CSV');
+        data_field.setAttribute('value', csv_data);
+        form.appendChild(data_field);
+
+        // create the button that sends the CSV data to the back-end...
+        let button  = document.createElement('INPUT');
+        button.setAttribute('name', 'U3Das_FFox_Btn');
+        button.setAttribute('type', 'submit');
+        button.setAttribute('value', 'Download CSV');
+        button.setAttribute('class', config.button_css_class);
+        form.appendChild(button);
+
+        // add the form to the parent.
+        parent.appendChild(form);
+
+        return true;
+    }; // addButton
 
     /**
      * getUserID
@@ -104,13 +159,15 @@ let JALJR = (() => {
     main = () => {
         const user = getUserID();
         const csv = generateCSV();
+        addButton(csv);
     } // main
 
     return {
         main        : main,
+        addButton   : addButton,
         getUserID   : getUserID,
         generateCSV : generateCSV
     };
 })();
 
-JALJR.main();
+U3Das_FFox.main();
