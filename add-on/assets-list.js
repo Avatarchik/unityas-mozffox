@@ -21,7 +21,7 @@ let U3Das_FFox = (() => {
         date_css_class          : 'iIoTnjX3ep3NHov9GbPAb',
         buttons_div_css_class   : '_1zbKdUvj5aiTaYPugA2oG9',
         button_css_class        : '_3UE3JHvXlpWV2IcGxqdlNT pDJt-g2kSogfau8sJrU7N auto _3wJlwPyz75q9ihlChgrt8u F35wsRpzrixrswzmS7EJ2',
-        button_form_action      : 'http://app.jonasluz.net.br/u3dasffox/',
+        button_form_action      : 'http://put_backend_url_here',
         continue_trigger        : 'Release Notes'
     }; // config
 
@@ -130,15 +130,16 @@ let U3Das_FFox = (() => {
             let csv_line = purchased;
             // loop through the asset items of data and construct its CSV line.
             for (let j = 0, get_out = false; j < data.length && (!get_out); j++) {
-                let datum = data[j].innerText;
+                let datum = data[j].innerText.replace('"', "'");
+                if (datum.includes(',')) {
+                    datum = '"' + datum + '"';
+                }
                 if (datum === config.continue_trigger) {
                     get_out = true;
                 } else if (datum !== "") {
                     csv_line += ',' + datum;
                     let url = data[j].href;
-                    if (url) {
-                        csv_line += ',' + url;
-                    }
+                    csv_line += url ? ',' + url : ',';
                 }
             }
             // add the generated line to the result list.
