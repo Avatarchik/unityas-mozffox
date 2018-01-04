@@ -9,8 +9,8 @@
 let U3Das_FFox = (() => {
 
     let 
-        config, main,
-        addButton, getUserID, generateCSV
+        config, main, addButton, 
+        getUserID, getPage, generateCSV
     ;
 
     // configuration of the routine based on Unity Asset Store purchased list page structure
@@ -21,7 +21,8 @@ let U3Das_FFox = (() => {
         date_css_class          : 'iIoTnjX3ep3NHov9GbPAb',
         buttons_div_css_class   : '_1zbKdUvj5aiTaYPugA2oG9',
         button_css_class        : '_3UE3JHvXlpWV2IcGxqdlNT pDJt-g2kSogfau8sJrU7N auto _3wJlwPyz75q9ihlChgrt8u F35wsRpzrixrswzmS7EJ2',
-        button_form_action      : 'http://put_backend_url_here',
+        button_form_action      : 'http://add_backend_url_here/',
+        location_page_param     : 'page=',
         continue_trigger        : 'Release Notes'
     }; // config
 
@@ -32,7 +33,7 @@ let U3Das_FFox = (() => {
      * @returns {boolean} true if button added; false otherwise.
      *
      */
-    addButton = (user, csv_data) => {
+    addButton = (user, page, csv_data) => {
 
         // if the form already exists, delete it.
         let form = document.getElementById('U3Das_FFox_Form');
@@ -56,19 +57,26 @@ let U3Das_FFox = (() => {
         form.setAttribute('method', 'post');
         form.setAttribute('target', '_blank');
 
+        // create the hidden field where to store the user name.
+        let input_user  = document.createElement('INPUT');
+        input_user.setAttribute('type', 'hidden');
+        input_user.setAttribute('name', 'U3Das_FFox_User');
+        input_user.setAttribute('value', user);
+        form.appendChild(input_user);
+
+        // create the hidden field where to store the user name.
+        let input_page  = document.createElement('INPUT');
+        input_page.setAttribute('type', 'hidden');
+        input_page.setAttribute('name', 'U3Das_FFox_Page');
+        input_page.setAttribute('value', page);
+        form.appendChild(input_page);
+
         // create the hidden field where to store the CSV data.
-        let user_name  = document.createElement('INPUT');
-        user_name.setAttribute('type', 'hidden');
-        user_name.setAttribute('name', 'U3Das_FFox_User');
-        user_name.setAttribute('value', user);
-        form.appendChild(user_name);
-        
-        // create the hidden field where to store the CSV data.
-        let data_field  = document.createElement('INPUT');
-        data_field.setAttribute('type', 'hidden');
-        data_field.setAttribute('name', 'U3Das_FFox_CSV');
-        data_field.setAttribute('value', csv_data);
-        form.appendChild(data_field);
+        let input_data  = document.createElement('INPUT');
+        input_data.setAttribute('type', 'hidden');
+        input_data.setAttribute('name', 'U3Das_FFox_CSV');
+        input_data.setAttribute('value', csv_data);
+        form.appendChild(input_data);
 
         // create the button that sends the CSV data to the back-end...
         let button  = document.createElement('INPUT');
@@ -93,9 +101,34 @@ let U3Das_FFox = (() => {
     getUserID = () => {
 
         let data = document.getElementsByClassName(config.user_info_css_class);
+        let user = data.length > 0 ? data[0].innerText : undefined;
+        console.log('User: ' + user);
 
-        return data.length > 0 ? data[0].innerText : undefined;
+        return user;
     }; // getUserID
+
+    /**
+     * getPage
+     * @description Finds the number of this page in the URL.
+     * @returns {number} number of page.
+     * 
+     */
+    getPage = () => {
+
+        let url = window.location.href;
+        let pos = url.indexOf(config.location_page_param);
+
+        if (pos < 1) {
+            console.log('There is no page parameter. Assuming first page.');
+            return 1;
+        }
+
+        let len = config.location_page_param.length;
+        let page = parseInt(url.substr(pos + len));
+        console.log('Page number: ', page);
+
+        return page;
+    }; // getPage
 
     /**
      * generateCSV
@@ -166,8 +199,9 @@ let U3Das_FFox = (() => {
      */
     main = () => {
         const user = getUserID();
-        const csv = generateCSV();
-        addButton(user, csv.join("\n"));
+        const page = getPage();
+        const csv  = generateCSV();
+        addButton(user, page, csv.join("\n"));
     } // main
 
     return {

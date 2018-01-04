@@ -7,10 +7,11 @@
  */
 
     $user   = $_POST['U3Das_FFox_User'];
+    $page   = $_POST['U3Das_FFox_Page'];
     $csv    = $_POST['U3Das_FFox_CSV'];
 
     header('Content-Type: text/csv; charset=utf-8');
-    header("Content-Disposition: attachment; filename=UnityAssetStore-$user.csv");
+    header("Content-Disposition: attachment; filename=UnityAssetStore-$user-Sheet#$page.csv");
 
     file_put_contents('php://output', $csv);
 ?>
