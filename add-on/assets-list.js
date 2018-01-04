@@ -21,7 +21,7 @@ let U3Das_FFox = (() => {
         date_css_class          : 'iIoTnjX3ep3NHov9GbPAb',
         buttons_div_css_class   : '_1zbKdUvj5aiTaYPugA2oG9',
         button_css_class        : '_3UE3JHvXlpWV2IcGxqdlNT pDJt-g2kSogfau8sJrU7N auto _3wJlwPyz75q9ihlChgrt8u F35wsRpzrixrswzmS7EJ2',
-        button_form_action      : 'http://example.com/put_the_backend_url_here',
+        button_form_action      : 'http://app.jonasluz.net.br/u3dasffox/',
         continue_trigger        : 'Release Notes'
     }; // config
 
@@ -32,7 +32,7 @@ let U3Das_FFox = (() => {
      * @returns {boolean} true if button added; false otherwise.
      *
      */
-    addButton = (csv_data) => {
+    addButton = (user, csv_data) => {
 
         // if the form already exists, delete it.
         let form = document.getElementById('U3Das_FFox_Form');
@@ -56,6 +56,13 @@ let U3Das_FFox = (() => {
         form.setAttribute('method', 'post');
         form.setAttribute('target', '_blank');
 
+        // create the hidden field where to store the CSV data.
+        let user_name  = document.createElement('INPUT');
+        user_name.setAttribute('type', 'hidden');
+        user_name.setAttribute('name', 'U3Das_FFox_User');
+        user_name.setAttribute('value', user);
+        form.appendChild(user_name);
+        
         // create the hidden field where to store the CSV data.
         let data_field  = document.createElement('INPUT');
         data_field.setAttribute('type', 'hidden');
@@ -159,7 +166,7 @@ let U3Das_FFox = (() => {
     main = () => {
         const user = getUserID();
         const csv = generateCSV();
-        addButton(csv);
+        addButton(user, csv.join("\n"));
     } // main
 
     return {
